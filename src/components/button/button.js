@@ -27,7 +27,7 @@ export default class Button extends React.Component {
         });
 
         return (
-            <Component { ...others } className={ cls }>{ children }</Component>
+            <Component { ...others } className={ cls }>{ children } test</Component>
         );
     }
 };
