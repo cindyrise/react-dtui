@@ -146,7 +146,7 @@ module.exports = {
         rules,
     },
     resolve: {
-        extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx', '.less'],
+        extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx', '.scss'],
         modules: [
             path.resolve(__dirname, 'node_modules'),
             jsSourcePath,
