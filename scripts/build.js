@@ -6,7 +6,6 @@ const cjs = require('rollup-plugin-commonjs');
 const uglify = require('rollup-plugin-uglify');
 const replace = require('rollup-plugin-replace');
 const resolveNode = require('rollup-plugin-node-resolve');
-const less = require('rollup-plugin-less');
 const sass= require('rollup-plugin-sass');
 const progress = require('rollup-plugin-progress');
 //file handling
