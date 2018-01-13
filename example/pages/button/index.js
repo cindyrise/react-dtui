@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, ButtonArea} from '../../../build/libs';
 import Layout from '../../layout';
-import './button.less';
+import './style.scss';
 
 export default class ButtonDemo extends React.Component {
 
@@ -13,7 +13,7 @@ export default class ButtonDemo extends React.Component {
                 <Button component="p">component-p</Button>
                 <Button type="vcode">btn -a</Button>
                 <ButtonArea>
-                    <Button type="default">Secondary Normal</Button>
+                    <Button  className="dtui-bb" type="default">Secondary Normal</Button>
                     <Button type="default" disabled>Secondary Disabled</Button>
                 </ButtonArea>
 

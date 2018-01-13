@@ -1,0 +1,16 @@
+@mixin _setArrow($arrowsize, $borderColor, $borderWidth){
+    display: inline-block;
+    height: $arrowsize;
+    width: $arrowsize;
+    border-width: $borderWidth $borderWidth 0 0;
+    border-color: $borderColor;
+    border-style: solid;
+}
+
+@mixin setArrow($direction, $arrowsize, $borderColor, $borderWidth) {
+    @include _setArrow($arrowsize, $borderColor, $borderWidth);
+    transform: matrix(0.71,-0.71,0.71,0.71,0,0); // rotate(-45deg)
+    @if $direction == 'right'{  position: relative;top: -2px;}
+    @if $direction =='down'{ position: relative;top: -3px;}
+    @if $direction =='left'{ position: relative;top: -2px;}
+}

@@ -1,8 +1,4 @@
-/* eslint strict: [2, "global"] */
 
-//webpack
-const webpack = require('webpack');
-const webpackConfig = require('../webpack.config');
 //rollup with plugins
 const rollup = require('rollup').rollup;
 const babelRollup = require('rollup-plugin-babel');
@@ -11,6 +7,7 @@ const uglify = require('rollup-plugin-uglify');
 const replace = require('rollup-plugin-replace');
 const resolveNode = require('rollup-plugin-node-resolve');
 const less = require('rollup-plugin-less');
+const sass= require('rollup-plugin-sass');
 const progress = require('rollup-plugin-progress');
 //file handling
 const rimraf = require('rimraf');
@@ -76,7 +73,7 @@ function makeConfig(bundleType) {
     let config = {
         input: 'src/index.js',
         plugins: [
-            less({
+            sass({
                 output: atrs.path + 'react-dtui.css'
             }),
             cjs({
@@ -150,21 +147,6 @@ function createNodeBuild() {
         });
         bat.on('exit', (code) => {
             res(code);
-        });
-    };
-}
-
-function createWebpackBuild(config) {
-    return (res, rej) => {
-        webpack(config, (err, stats) => {
-            if (err || stats.hasErrors()) {
-                rej('webpack build error');
-            }
-            log(stats.toString({
-                chunks: false,  // Makes the build much quieter
-                colors: true    // Shows colors in the console
-            }));
-            res();
         });
     };
 }
