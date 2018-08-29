@@ -60,7 +60,7 @@ function makeConfig(bundleType) {
         plugins: [
             postcss({
                 plugins: [cssnano(),autoprefixer],
-                extract:atrs.path+'roo-bat.css'
+                extract:atrs.path+'roo-bat.min.css'
               }),
             cjs({
                 include: 'node_modules/**',
@@ -159,8 +159,8 @@ rimraf('release', () => {
     fs.mkdirSync(join('release', 'dist'));
     tasks.push(
         createTask('Making Babel Modules', createNodeBuild()),
-        createTask('Making Babel Modules', createBundle(Bundles.UMD)),
-        createTask('Making UMD Dev Bundles', createBundle(Bundles.UMD_MINI)),
+        createTask('Making UMD Modules', createBundle(Bundles.UMD)),
+        createTask('Making UMD MINI Bundles', createBundle(Bundles.UMD_MINI)),
     );
     runTasks(tasks).then(() => {
         CLI.section('FINISH release');

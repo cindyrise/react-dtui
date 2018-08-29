@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonArea} from '../../../release/lib';
+import {Button, ButtonArea} from '../../../release/dist/roo-bat.min';
 import Layout from '../../layout';
 import './style.scss';
 
