@@ -15,7 +15,6 @@ const rimraf = require('rimraf');
 const join = require('path').join;
 const fs = require('fs');
 const exec = require('child_process').exec;
-//console utils
 const argv = require('minimist')(process.argv.slice(2));
 const chalk = require('chalk');
 const showWrite = argv.progress;
@@ -25,50 +24,43 @@ const CLI = {
     section: msg => showSection ? log(chalk.white(chalk.underline.bgBlue(msg))) : false,
     write: (indicator, msg) => showWrite ? process.stdout.write(`(${chalk.red(indicator)})` + msg) : false
 };
-//variables
+
 const Bundles = {
-    UMD_DEV: 'UMD_DEV',
-    UMD_PROD: 'UMD_PROD',
-    IIFE_DEV: 'IIFE_DEV',
-    IIFE_PROD: 'IIFE_PROD',
-    DEMO_PROD: 'DEMO_PROD',
-    DOC_PROD: 'DOC_PROD'
+    UMD: 'UMD',
+    UMD_MINI: 'UMD_MINI',
+    IIFE: 'IIFE',
+    IIFE_MINI: 'IIFE_MINI'
+
 };
 let tasks = [];
 
-//attributes for different bundles
 function makeBundleAttributes(bundleType) {
     let atrs = {
-        path: '',
-        env: 'development',
-        format: 'iife',
+        path :'./release/dist/',
+        format: 'umd',
         sourceMap: true,
         plugins: []
     };
 
     switch (bundleType) {
-        case Bundles.UMD_PROD:
-            atrs.env = 'production';
-            atrs.sourceMap = false;
-            atrs.format = 'umd';
+        case Bundles.UMD_MINI:
             atrs.plugins.push(uglify());
-        case Bundles.UMD_DEV:
-            atrs.path = './release/libs/';
             atrs.format = 'umd';
             break;
-        case Bundles.IIFE_PROD:
-            atrs.env = 'production';
+        case Bundles.UMD:
             atrs.sourceMap = false;
-            atrs.plugins.push(uglify());
-        case Bundles.IIFE_DEV:
-            atrs.path = './release/dist/';
             break;
-    }
+        // case Bundles.IIFE_MINI:
+        //     atrs.sourceMap = true;
+        //     atrs.plugins.push(uglify());
+        //     break;
+        // case Bundles.IIFE:
+        //     break;
 
+    }
     return atrs;
 }
 
-//rollup config generations
 function makeConfig(bundleType) {
     let atrs = makeBundleAttributes(bundleType);
     let config = {
@@ -90,7 +82,6 @@ function makeConfig(bundleType) {
                 presets: [['es2015', { modules: false }], 'stage-2', 'react'],
                 plugins: ['external-helpers']
             }),
-            replace({ 'process.env.NODE_ENV': JSON.stringify(atrs.env) }),
             resolveNode({
                 jsnext: true,
                 main: true
@@ -98,30 +89,23 @@ function makeConfig(bundleType) {
         ].concat(atrs.plugins),
         external: ['react', 'react-dom'],
     };
-
     if (showWrite) {
         config.plugins.push(progress({
             clearLine: false
         }));
     }
-
     return config;
 }
 
-//create a promise task
 function createTask(msg, fn) {
     return () => {
         CLI.section(msg);
         return new Promise((res, rej) => fn(res, rej));
     };
 }
-
-//run async tasks in sync to avoid output mess
 function runTasks($tasks) {
     let index = 0;
-
     return new Promise((res, rej) => {
-
         function next() {
             if (index < $tasks.length) {
                 $tasks[index]().then(next, rej);
@@ -130,7 +114,6 @@ function runTasks($tasks) {
                 res();
             }
         }
-
         next();
     });
 }
@@ -138,7 +121,7 @@ function runTasks($tasks) {
 function createNodeBuild() {
     return (res, rej) => {
         let count = 0;
-        let bat = exec('NODE_ENV=production babel ./src --out-dir ./release/libs --copy-files', { stdio: [0, 1, 2] }, (error, stdout, stderr) => {
+        let bat = exec(' babel ./src --out-dir ./release/lib --copy-files', { stdio: [0, 1, 2] }, (error, stdout, stderr) => {
             if (error) {
                 rej(error);
                 return;
@@ -161,7 +144,7 @@ function createBundle(bundleType) {
                 CLI.section('Writing Bundle to file');
                 return bundle.write({
                     name: 'DTUI',
-                    file: atrs.path + (atrs.env === 'production' ? 'react-dtui.min.js' : 'react-dtui.js'),
+                    file: atrs.path + (bundleType==Bundles.UMD_MINI ?'react-bat.min.js' : 'react-bat.js'),
                     format: atrs.format,
                     sourcemap: atrs.sourceMap,
                     globals: {
@@ -178,29 +161,19 @@ function createBundle(bundleType) {
     };
 }
 
-//clean directory
 rimraf('release', () => {
-    // create a new release directory
     fs.mkdirSync('release');
-    fs.mkdirSync(join('release', 'libs'));
-    // create the dist folder for UMD bundles
+    fs.mkdirSync(join('release', 'lib'));
     fs.mkdirSync(join('release', 'dist'));
-    // adding release tasks
     tasks.push(
         //Node individual components release
         createTask('Making Babel Modules', createNodeBuild()),
-        //createTask('Making UMD Dev Bundles', createBundle(Bundles.UMD_DEV)),
-        createTask('Making UMD Production Bundles', createBundle(Bundles.UMD_PROD)),
-        //createTask('Making IIFE Dev Bundles', createBundle(Bundles.IIFE_DEV)),
-        createTask('Making IIFE Production Bundles', createBundle(Bundles.IIFE_PROD))
+        createTask('Making Babel Modules', createBundle(Bundles.UMD)),
+        createTask('Making UMD Dev Bundles', createBundle(Bundles.UMD_MINI)),
     );
-
-    // run tasks
     runTasks(tasks).then(() => {
-        // all done here
         CLI.section('FINISH release');
     }, err => {
-        // rejection happened
         log('Error', err);
     });
 

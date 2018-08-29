@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import Pages from './index';
 import './style.scss';
-import '../build/libs/react-dtui.css';
+import '../release/libs/roo-bat.css';
 import 'babel-polyfill';
 
 const {Home, Button

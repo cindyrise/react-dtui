@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ButtonArea} from '../../../build/libs';
+import {Button, ButtonArea} from '../../../release/libs';
 import Layout from '../../layout';
 import './style.scss';
 
