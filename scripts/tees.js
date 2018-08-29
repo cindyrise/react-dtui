@@ -1,4 +1,3 @@
-
 //rollup with plugins
 const rollup = require('rollup').rollup;
 const babelRollup = require('rollup-plugin-babel');
@@ -6,11 +5,9 @@ const cjs = require('rollup-plugin-commonjs');
 const uglify = require('rollup-plugin-uglify').uglify;
 const replace = require('rollup-plugin-replace');
 const resolveNode = require('rollup-plugin-node-resolve');
-const postcss=require('rollup-plugin-postcss');
-const cssnano =require('cssnano');
-const autoprefixer = require('autoprefixer');
+const sass= require('rollup-plugin-sass');
 const progress = require('rollup-plugin-progress');
-
+//file handling
 const rimraf = require('rimraf');
 const join = require('path').join;
 const fs = require('fs');
@@ -53,7 +50,7 @@ function makeBundleAttributes(bundleType) {
             atrs.format = 'umd';
             atrs.plugins.push(uglify());
         case Bundles.UMD_DEV:
-            atrs.path = './release/libs/';
+            atrs.path = './tempbuild/libs/';
             atrs.format = 'umd';
             break;
         case Bundles.IIFE_PROD:
@@ -61,7 +58,7 @@ function makeBundleAttributes(bundleType) {
             atrs.sourceMap = false;
             atrs.plugins.push(uglify());
         case Bundles.IIFE_DEV:
-            atrs.path = './release/dist/';
+            atrs.path = './tempbuild/dist/';
             break;
     }
 
@@ -74,10 +71,9 @@ function makeConfig(bundleType) {
     let config = {
         input: 'src/index.js',
         plugins: [
-            postcss({
-                plugins: [cssnano(),autoprefixer],
-                extract:atrs.path+'roo-bat.css'
-              }),
+            sass({
+                output: atrs.path + 'react-dtui.css'
+            }),
             cjs({
                 include: 'node_modules/**',
                 namedExports: {
@@ -138,7 +134,7 @@ function runTasks($tasks) {
 function createNodeBuild() {
     return (res, rej) => {
         let count = 0;
-        let bat = exec('NODE_ENV=production babel ./src --out-dir ./release/libs --copy-files', { stdio: [0, 1, 2] }, (error, stdout, stderr) => {
+        let bat = exec('NODE_ENV=production babel ./src --out-dir ./tempbuild/libs --copy-files', { stdio: [0, 1, 2] }, (error, stdout, stderr) => {
             if (error) {
                 rej(error);
                 return;
@@ -179,15 +175,15 @@ function createBundle(bundleType) {
 }
 
 //clean directory
-rimraf('release', () => {
-    // create a new release directory
-    fs.mkdirSync('release');
-    fs.mkdirSync(join('release', 'libs'));
+rimraf('tempbuild', () => {
+    // create a new tempbuild directory
+    fs.mkdirSync('tempbuild');
+    fs.mkdirSync(join('tempbuild', 'libs'));
     // create the dist folder for UMD bundles
-    fs.mkdirSync(join('release', 'dist'));
-    // adding release tasks
+    fs.mkdirSync(join('tempbuild', 'dist'));
+    // adding tempbuild tasks
     tasks.push(
-        //Node individual components release
+        //Node individual components tempbuild
         createTask('Making Babel Modules', createNodeBuild()),
         //createTask('Making UMD Dev Bundles', createBundle(Bundles.UMD_DEV)),
         createTask('Making UMD Production Bundles', createBundle(Bundles.UMD_PROD)),
@@ -198,11 +194,10 @@ rimraf('release', () => {
     // run tasks
     runTasks(tasks).then(() => {
         // all done here
-        CLI.section('FINISH release');
+        CLI.section('FINISH tempbuild');
     }, err => {
         // rejection happened
         log('Error', err);
     });
 
 });
-

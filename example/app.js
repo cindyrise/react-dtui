@@ -8,7 +8,7 @@ import {
     Link
 } from 'react-router-dom';
 import Pages from './index';
-import './style.less';
+import './style.scss';
 import '../build/libs/react-dtui.css';
 import 'babel-polyfill';
 

@@ -1,0 +1,7 @@
+@mixin setTapColor($c:#000) {
+    -webkit-tap-highlight-color: $c;
+}
+
+
+
+
