@@ -1,25 +1,14 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {
     Switch,
     HashRouter as Router,
-    Route,
-    IndexRoute,
-    Link
+    Route
 } from 'react-router-dom';
-import Pages from './index';
 import './style.scss';
-//import '../release/dist/roo-bat.min.css';
-import 'babel-polyfill';
-
-const {Home, Button
-} = Pages;
-
-const routes = [
-    { path: '/', component: Home, exact: true },
-    { path: '/button', component: Button }
-];
-
+import'../release/dist/roo-bat.min.css';
+import routes from './router';
 
 const App = (props, context) =>
     (

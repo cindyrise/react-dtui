@@ -72,5 +72,5 @@ module.exports = {
         hot: !isProduction,
         host: '0.0.0.0',
         disableHostCheck: true
-    },
+    }
 };
