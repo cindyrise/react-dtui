@@ -10,8 +10,8 @@ class ButtonArea extends Component {
     render() {
         const {direction, children, className} = this.props;
         const cls = classNames({
-            'dtui-btn-area': true,
-            'dtui-btn-area_inline': direction === 'horizontal',
+            'bat-btn-area': true,
+            'bat-btn-area_inline': direction === 'horizontal',
             [className]: className
         });
 

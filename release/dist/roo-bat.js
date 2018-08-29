@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react')) :
   typeof define === 'function' && define.amd ? define(['react'], factory) :
-  (global.DTUI = factory(global.React));
+  (global['roo-bat'] = factory(global.React));
 }(this, (function (React) { 'use strict';
 
   var React__default = 'default' in React ? React['default'] : React;
@@ -159,16 +159,16 @@
                   others = objectWithoutProperties(_props, ['component', 'type', 'size', 'plain', 'className', 'children']);
 
               var Component = component ? component : this.props.href || type === 'vcode' ? 'a' : 'button';
-              var cls = type === 'vcode' ? classNames('dtui-vcode-btn', defineProperty({}, className, className)) : classNames(defineProperty({
-                  'dtui-btn': true,
-                  'dtui-btn_mini': size === 'small',
-                  'dtui-btn_primary': type === 'primary' && !plain,
-                  'dtui-btn_default': type === 'default' && !plain,
-                  'dtui-btn_warn': type === 'warn',
-                  'dtui-btn_plain-primary': type === 'primary' && plain,
-                  'dtui-btn_plain-default': type === 'default' && plain,
-                  'dtui-btn_disabled': this.props.disabled && !plain,
-                  'dtui-btn_plain-disabled': this.props.disabled && plain
+              var cls = type === 'vcode' ? classNames('bat-vcode-btn', defineProperty({}, className, className)) : classNames(defineProperty({
+                  'bat-btn': true,
+                  'bat-btn_mini': size === 'small',
+                  'bat-btn_primary': type === 'primary' && !plain,
+                  'bat-btn_default': type === 'default' && !plain,
+                  'bat-btn_warn': type === 'warn',
+                  'bat-btn_plain-primary': type === 'primary' && plain,
+                  'bat-btn_plain-default': type === 'default' && plain,
+                  'bat-btn_disabled': this.props.disabled && !plain,
+                  'bat-btn_plain-disabled': this.props.disabled && plain
               }, className, className));
 
               return React__default.createElement(
@@ -205,8 +205,8 @@
                   className = _props.className;
 
               var cls = classNames(defineProperty({
-                  'dtui-btn-area': true,
-                  'dtui-btn-area_inline': direction === 'horizontal'
+                  'bat-btn-area': true,
+                  'bat-btn-area_inline': direction === 'horizontal'
               }, className, className));
 
               return React__default.createElement(
@@ -230,9 +230,9 @@
           others = objectWithoutProperties(props, ['className', 'primary', 'children']);
 
       var cls = classNames(defineProperty({
-          'dtui-form-preview__btn': true,
-          'dtui-form-preview__btn_default': !primary,
-          'dtui-form-preview__btn_primary': primary
+          'bat-form-preview__btn': true,
+          'bat-form-preview__btn_default': !primary,
+          'bat-form-preview__btn_primary': primary
       }, className, className));
       return React__default.createElement(
           'a',

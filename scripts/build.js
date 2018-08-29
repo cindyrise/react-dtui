@@ -41,7 +41,6 @@ function makeBundleAttributes(bundleType) {
         sourceMap: true,
         plugins: []
     };
-
     switch (bundleType) {
         case Bundles.UMD_MINI:
             atrs.plugins.push(uglify());
@@ -50,13 +49,6 @@ function makeBundleAttributes(bundleType) {
         case Bundles.UMD:
             atrs.sourceMap = false;
             break;
-        // case Bundles.IIFE_MINI:
-        //     atrs.sourceMap = true;
-        //     atrs.plugins.push(uglify());
-        //     break;
-        // case Bundles.IIFE:
-        //     break;
-
     }
     return atrs;
 }
@@ -143,8 +135,8 @@ function createBundle(bundleType) {
             .then(bundle => {
                 CLI.section('Writing Bundle to file');
                 return bundle.write({
-                    name: 'DTUI',
-                    file: atrs.path + (bundleType==Bundles.UMD_MINI ?'react-bat.min.js' : 'react-bat.js'),
+                    name: 'roo-bat',
+                    file: atrs.path + (bundleType==Bundles.UMD_MINI ?'roo-bat.min.js': 'roo-bat.js'),
                     format: atrs.format,
                     sourcemap: atrs.sourceMap,
                     globals: {
@@ -166,7 +158,6 @@ rimraf('release', () => {
     fs.mkdirSync(join('release', 'lib'));
     fs.mkdirSync(join('release', 'dist'));
     tasks.push(
-        //Node individual components release
         createTask('Making Babel Modules', createNodeBuild()),
         createTask('Making Babel Modules', createBundle(Bundles.UMD)),
         createTask('Making UMD Dev Bundles', createBundle(Bundles.UMD_MINI)),
